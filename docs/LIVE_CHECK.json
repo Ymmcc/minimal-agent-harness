@@ -1,0 +1,59 @@
+{
+  "status": "passed",
+  "date": "2026-11-06T15:02:29.808198+00:00",
+  "model": "deepseek-v4.1-flash-1017",
+  "checks": [
+    {
+      "name": "直接回复",
+      "passed": true,
+      "tools": []
+    },
+    {
+      "name": "记录对话信息",
+      "passed": true,
+      "tools": []
+    },
+    {
+      "name": "纯对话追问",
+      "passed": true,
+      "tools": []
+    },
+    {
+      "name": "计算后新增待办",
+      "passed": true,
+      "tools": [
+        "calculator",
+        "todo"
+      ]
+    },
+    {
+      "name": "带工具的追问",
+      "passed": true,
+      "tools": [
+        "todo"
+      ]
+    },
+    {
+      "name": "独立 session",
+      "passed": true,
+      "tools": [
+        "todo"
+      ]
+    },
+    {
+      "name": "重建 Runtime 后恢复",
+      "passed": true,
+      "tools": [
+        "todo"
+      ]
+    },
+    {
+      "name": "模拟搜索",
+      "passed": true,
+      "tools": [
+        "search"
+      ]
+    }
+  ],
+  "elapsed_seconds": 17.97
+}

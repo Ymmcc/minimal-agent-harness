@@ -65,7 +65,7 @@ Remove-Item Env:LLM_API_KEY
 
 程序在基础地址后追加 `/chat/completions`。远程地址要求 HTTPS；本地服务可用 localhost HTTP。禁止重定向，避免凭证被转发。密钥、`.env` 和本地数据库不应提交到仓库。
 
-真实模式示例：先问“计算 18×7，再把结果记为复习待办”，然后问“把刚才的待办标为完成”。模型应先算、再写入、再根据 ID 更新；具体表现依赖所选模型。**本次未使用真实付费模型验证，这些自然语言示例是验收步骤，不是已完成的实测结论。**
+真实模式示例：先问“计算 18×7，再把结果记为复习待办”，然后问“把刚才的待办标为完成”。已使用 `deepseek-v4.1-flash-1017` 验证直接回复、对话追问、多步工具、待办更新、会话隔离、状态恢复及 mock 搜索，共 8 项通过。详细结果见 [测试报告](docs/TEST_REPORT.md)。
 
 ## 设计
 
@@ -139,7 +139,13 @@ trace 存入本地 SQLite，包含 `run_id`、step、调用 ID、工具名称、
 python -X utf8 -m unittest discover -v
 ```
 
-测试通过脚本模型、真实 SQLite 和本地 HTTP 服务验证循环与适配器，不调用外部 LLM，不消耗额度。详细结果见 [测试报告](docs/TEST_REPORT.md)。
+默认自动测试通过脚本模型、真实 SQLite 和本地 HTTP 服务验证循环与适配器，不调用外部 LLM。33 个自动测试通过；真实模型另有 8 项验收通过。详细结果见 [测试报告](docs/TEST_REPORT.md)。
+
+如需自行复现真实模型验收，先配置 `LLM_BASE_URL`、`LLM_MODEL`，再在本机终端运行以下命令，按提示遮罩输入自己的密钥。此检查会调用外部模型并使用额度，结果保存在不提交的 `data/live_check.json`。
+
+```powershell
+python -X utf8 -m scripts.live_check --prompt
+```
 
 - [架构设计回答：五个模块各选一道](docs/ARCHITECTURE.md)
 - [AI Prompt 与问题解决记录](docs/AI_USAGE.md)

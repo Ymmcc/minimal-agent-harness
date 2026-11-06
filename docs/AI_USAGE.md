@@ -127,4 +127,17 @@ OK
 
 核对时保留了几个限制：历史摘录有损；字符数不是精确 token 数；同 call_id 去重不等于跨系统 exactly-once；本地 HTTP 测试不等于真实供应商推理测试。
 
-运行时 system prompt 见 `agent/context.py` 的 `SYSTEM`；工具描述和 Schema 见 `agent/tools.py`。完整验证结果见 [测试报告](TEST_REPORT.md)。当前未使用真实供应商模型做端到端推理验证。
+运行时 system prompt 见 `agent/context.py` 的 `SYSTEM`；工具描述和 Schema 见 `agent/tools.py`。完整验证结果见 [测试报告](TEST_REPORT.md)。这一阶段完成后，继续补真实模型验收。
+
+
+## 7. 用真实模型验收，核对工具结果与业务状态
+
+**提示要点：**
+
+> 接入真实兼容模型，检查直接回复、多步工具、追问、独立 session 和状态恢复。验证凭数据库状态判断，报告不保存密钥或接口鉴权信息。
+
+使用 `deepseek-v4.1-flash-1017` 完成 8 项验收：计算结果为 126，待办实际写入；追问后 done 变为 1；另一 session 读取为空；重建 Runtime 后仍保留原状态。search 的调用与模拟数据说明也通过。
+
+为了让验收可以重复执行，补了 `scripts/live_check.py`；再为验收脚本增加成功、失败两条自动测试，验证模型出错不会误报通过、进程密钥变量会清理。当前 33 个本地自动测试通过，8 项真实模型验收通过；后者单次耗时 17.97 秒。
+
+这次没有修改核心 Runtime 来迎合特定模型。真实结果摘要见 [LIVE_CHECK.json](LIVE_CHECK.json)；它只记录场景、成败与工具名称。
